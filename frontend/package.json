@@ -19,13 +19,11 @@
     "antd-img-crop": "^4.24.0",
     "axios": "^1.7.2",
     "dotenv": "^16.4.5",
-    "jwt-decode": "^4.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.24.1",
     "react-scripts": "5.0.1",
     "react-use-websocket": "^3.0.0",
-    "socket.io-client": "^4.7.5",
     "ts-jest": "^29.2.2",
     "typescript": "^4.4.2",
     "web-vitals": "^2.1.0",
@@ -56,6 +54,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.14.5",
     "@babel/preset-env": "^7.24.8",
     "@eslint/js": "^9.17.0",
     "@testing-library/dom": "^10.3.1",

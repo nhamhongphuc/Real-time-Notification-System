@@ -2,10 +2,11 @@ from fastapi import APIRouter, Depends, HTTPException
 from typing import Annotated
 from sqlalchemy.orm import Session
 from app.database import SessionLocal
-from app.models import Like, Post
-from app.schemas import LikeCreate, LikeResponse
-from app.auth import get_current_user
-from app.notifications import notify_like, notify_unlike
+from app.models.post import Post
+from app.models.like import Like
+from app.routers.auth import get_current_user
+from app.routers.notifications import notify_like, notify_unlike
+from app.schemas.like import LikeResponse, LikeCreate
 
 router = APIRouter(
     dependencies=[Depends(get_current_user)]

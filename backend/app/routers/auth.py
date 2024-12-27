@@ -4,12 +4,11 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from starlette import status
 from app.database import SessionLocal
-from app.models import User
+from app.models.user import User
 from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
-
-from app.schemas import UserCreate, UserResponse, Token
+from app.schemas.user import UserCreate, Token
 
 # JWT Settings
 SECRET_KEY = "123456"

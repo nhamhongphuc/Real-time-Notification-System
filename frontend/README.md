@@ -1,10 +1,10 @@
-# YouTube Video Sharing App
+# Post Sharing App
 
 ## Introduction
-This project is a web application for sharing YouTube videos. It demonstrates backend and frontend development skills, including user registration, video sharing, and real-time notifications. The app is built using NestJS for the backend and React with TypeScript for the frontend. The key features of the application include:
+This project is a web application for sharing Post. It demonstrates backend and frontend development skills, including user registration, video sharing, and real-time notifications. The app is built using FastAPI for the backend and React with TypeScript for the frontend. The key features of the application include:
 
 1. User registration and login
-2. Sharing YouTube videos
+2. Sharing post
 3. Viewing a list of shared videos
 4. Real-time notifications for new video shares
 

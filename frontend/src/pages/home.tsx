@@ -120,7 +120,7 @@ const Home = () => {
 
         if (data.action === "like" && !openNotificationModal) {
           openNotification(`${data.from} liked your post!`, "topRight");
-        } else if (data.action === "comment" && !openNotificationModal) {
+        } else if (data.action === "comment" && !openNotificationModal && item?.id !== data.post_id) {
           const contentPreview = data.content.length > 50 
                 ? `${data.content.substring(0, 50)}...` 
                 : data.content;
@@ -174,7 +174,7 @@ const Home = () => {
               id: Date.now(),
               content: data.content,
               username: data.from,
-              created_at: new Date(data.created_at).toISOString(),
+              created_at: data.created_at,
             },
             ...prev,
           ]);

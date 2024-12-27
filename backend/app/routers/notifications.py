@@ -2,9 +2,10 @@ from fastapi import APIRouter, Depends, WebSocket
 from typing import Annotated, Dict, List
 from app.database import get_db
 from sqlalchemy.orm import Session
-from app.models import Notification
-from app.auth import get_current_user
-from app.schemas import CommentResponse, NotificationResponse
+from app.models.notification import Notification
+from app.routers.auth import get_current_user
+from app.schemas.notification import NotificationResponse
+from app.schemas.comment import CommentResponse
 import json
 
 

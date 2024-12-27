@@ -1,15 +1,15 @@
 from fastapi import FastAPI, HTTPException, Depends, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from jose import JWTError, jwt
-from app import auth, posts, comments, likes, notifications
+from app.routers import auth, posts, comments, likes, notifications
 from app.database import Base, engine
 from app.database import SessionLocal
 from typing import Annotated
 from sqlalchemy.orm import Session
 from starlette import status
-from app.auth import get_current_user
-from app.notifications import manager
-from app.models import User
+from app.routers.auth import get_current_user
+from app.routers.notifications import manager
+from app.models.user import User
 # Initialize database
 Base.metadata.create_all(bind=engine)
 

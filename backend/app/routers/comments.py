@@ -2,11 +2,12 @@ from fastapi import APIRouter, Depends
 from typing import Annotated
 from sqlalchemy.orm import Session
 from app.database import SessionLocal
-from app.models import Comment, Post
-from app.schemas import CommentCreate, CommentResponse
-from app.auth import get_current_user
-from app.notifications import notify_comment
-from app.models import User
+from app.models.post import Post
+from app.models.comment import Comment
+from app.models.user import User
+from app.schemas.comment import CommentCreate, CommentResponse
+from app.routers.auth import get_current_user
+from app.routers.notifications import notify_comment
 
 router = APIRouter(
     dependencies=[Depends(get_current_user)]

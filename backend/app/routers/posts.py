@@ -3,9 +3,12 @@ from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from typing import Annotated, List, Optional
 from sqlalchemy.orm import Session
 from app.database import SessionLocal
-from app.models import Comment, Like, Post, User
-from app.schemas import GetPostResponse, PostResponse
-from app.auth import get_current_user
+from app.models.comment import Comment
+from app.models.like import Like
+from app.models.post import Post
+from app.models.user import User
+from app.schemas.post import GetPostResponse, PostResponse
+from app.routers.auth import get_current_user
 import shutil
 import os
 import uuid
