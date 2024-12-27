@@ -5,7 +5,7 @@ from app.database import SessionLocal
 from app.models import Like, Post
 from app.schemas import LikeCreate, LikeResponse
 from app.auth import get_current_user
-from app.notifications import notify_like
+from app.notifications import notify_like, notify_unlike
 
 router = APIRouter(
     dependencies=[Depends(get_current_user)]
@@ -35,15 +35,21 @@ async def like_post(like: LikeCreate, db: db_dependency, user: user_dependency):
     db.commit()
     db.refresh(new_like)
 
-    # Send notifications for new comments to author of the post
-    await notify_like(user.username, post.user_id, db)
+    # Send notifications for like to author of the post
+    await notify_like(user.username, post.user_id, like.post_id, db)
     return new_like
 
 @router.delete("/{post_id}", response_model=dict)
-def unlike_post(post_id: int, db: db_dependency, user: user_dependency):
+async def unlike_post(post_id: int, db: db_dependency, user: user_dependency):
+    post = db.query(Post).filter(Post.id == post_id).first()
+    if not post:
+        raise HTTPException(status_code=404, detail="Post not found")
     like = db.query(Like).filter(Like.post_id == post_id, Like.user_id == user.id).first()
     if not like:
         raise HTTPException(status_code=404, detail="Like not found")
     db.delete(like)
     db.commit()
+
+    # Send notifications unlike to author of the post
+    await notify_unlike(user.username, post.user_id, post_id, db)
     return {"detail": "Unliked successfully"}

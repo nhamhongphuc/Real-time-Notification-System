@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends, WebSocket
 from typing import Annotated, Dict, List
-
 from app.database import get_db
 from sqlalchemy.orm import Session
 from app.models import Notification
 from app.auth import get_current_user
 from app.schemas import CommentResponse, NotificationResponse
+import json
 
 
 class ConnectionManager:
@@ -40,26 +40,61 @@ db_dependency = Annotated[Session, Depends(get_db)]
 
 
 async def notify_comment(comment: CommentResponse, username: str, client_id: int, db: db_dependency):
-    message = f"{username} send new comment in your post: {comment.content}"
+    data = {
+        "action": "comment",
+        "content": comment.content,
+        "user_id": client_id,
+        "from": username,
+        "post_id": comment.post_id,
+        "created_at": str(comment.created_at),
+    }
+    message = json.dumps(data)
     notification = Notification(
         user_id=client_id,
         message=message
     )
     db.add(notification)
     db.commit()
-    await manager.send_personal_message(message, client_id)
+    await manager.broadcast(message)
     return {"message": "Notification sent"}
 
 
-async def notify_like(username: str, client_id: int, db: db_dependency):
-    message = f"{username} liked your post"
+async def notify_like(username: str, client_id: int, post_id: int, db: db_dependency):
+    data = {
+        "action": "like",
+        "content": "like",
+        "user_id": client_id,
+        "from": username,
+        "post_id": post_id,
+        "created_at": "",
+    }
+    message = json.dumps(data)
     notification = Notification(
         user_id=client_id,
         message=message
     )
     db.add(notification)
     db.commit()
-    await manager.send_personal_message(message, client_id)
+    await manager.broadcast(message)
+    return {"message": "Notification sent"}
+
+async def notify_unlike(username: str, client_id: int, post_id: int, db: db_dependency):
+    data = {
+        "action": "unlike",
+        "content": "unlike",
+        "user_id": client_id,
+        "from": username,
+        "post_id": post_id,
+        "created_at": "",
+    }
+    message = json.dumps(data)
+    notification = Notification(
+        user_id=client_id,
+        message=message
+    )
+    db.add(notification)
+    db.commit()
+    await manager.broadcast(message)
     return {"message": "Notification sent"}
 
 

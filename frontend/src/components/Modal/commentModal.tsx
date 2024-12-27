@@ -34,7 +34,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
   return (
     <Modal
       title="Comments"
-      visible={visible}
+      open={visible}
       onCancel={onClose}
       footer={[
         <Button key="cancel" onClick={onClose}>
