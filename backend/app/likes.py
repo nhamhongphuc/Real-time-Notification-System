@@ -36,7 +36,7 @@ async def like_post(like: LikeCreate, db: db_dependency, user: user_dependency):
     db.refresh(new_like)
 
     # Send notifications for new comments to author of the post
-    await notify_like(new_like, user.username, post.user_id)
+    await notify_like(user.username, post.user_id, db)
     return new_like
 
 @router.delete("/{post_id}", response_model=dict)

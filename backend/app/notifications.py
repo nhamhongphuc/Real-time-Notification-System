@@ -1,11 +1,11 @@
-from fastapi import APIRouter, Depends, WebSocket, WebSocketDisconnect, HTTPException, status
+from fastapi import APIRouter, Depends, WebSocket
 from typing import Annotated, Dict, List
 
 from app.database import get_db
 from sqlalchemy.orm import Session
-from app.models import User
+from app.models import Notification
 from app.auth import get_current_user
-from app.schemas import CommentResponse
+from app.schemas import CommentResponse, NotificationResponse
 
 
 class ConnectionManager:
@@ -32,22 +32,44 @@ class ConnectionManager:
         for connection in self.active_connections:
             await connection.send_text(message)
 
+
 manager = ConnectionManager()
 router = APIRouter()
 user_dependency = Annotated[dict, Depends(get_current_user)]
+db_dependency = Annotated[Session, Depends(get_db)]
 
-@router.post("/notify/comment")
-async def notify_comment(comment: CommentResponse, username: str, client_id: int):
+
+async def notify_comment(comment: CommentResponse, username: str, client_id: int, db: db_dependency):
     message = f"{username} send new comment in your post: {comment.content}"
+    notification = Notification(
+        user_id=client_id,
+        message=message
+    )
+    db.add(notification)
+    db.commit()
     await manager.send_personal_message(message, client_id)
     return {"message": "Notification sent"}
 
-@router.post("/notify/like")
-async def notify_like(like: str, username: str, client_id: int):
+
+async def notify_like(username: str, client_id: int, db: db_dependency):
     message = f"{username} liked your post"
+    notification = Notification(
+        user_id=client_id,
+        message=message
+    )
+    db.add(notification)
+    db.commit()
     await manager.send_personal_message(message, client_id)
     return {"message": "Notification sent"}
+
 
 @router.get("/notifications/count")
 async def get_notification_count():
     return {"count": len(manager.active_connections)}
+
+
+@router.get("/", response_model=list[NotificationResponse])
+def get_comments(db: db_dependency, user: user_dependency):
+    comments = db.query(Notification).order_by(
+        Notification.created_at.desc()).filter(Notification.user_id == user.id).all()
+    return comments

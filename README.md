@@ -61,7 +61,7 @@ A lightweight real-time notification system built with **FastAPI**, **WebSockets
 
 4. Run the backend server:
    ```bash
-   uvicorn main:app --reload
+   uvicorn app.main:app --reload
    ```
    The backend will run at `http://localhost:8000`.
 
@@ -92,12 +92,18 @@ A lightweight real-time notification system built with **FastAPI**, **WebSockets
 ### Backend
 ```
 backend/
-├── main.py               # FastAPI application entry point
-├── models.py             # Database models (SQLite)
-├── routers/
-│   ├── posts.py          # API endpoints for posts
-│   ├── notifications.py  # API endpoints for notifications
-├── websockets.py         # WebSocket manager
+├── app/
+│   ├── __init__.py
+│   ├── main.py
+│   ├── auth.py
+│   ├── posts.py
+│   ├── comments.py
+│   ├── likes.py
+│   ├── notifications.py
+│   ├── models.py
+│   ├── schemas.py
+│   ├── database.py
+│   ├── requirements.txt
 ```
 
 ### Frontend

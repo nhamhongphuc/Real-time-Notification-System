@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException, Depends, WebSocket, WebSocketDisconnect
+from fastapi.middleware.cors import CORSMiddleware
 from jose import JWTError, jwt
-from app import auth, posts, comments, likes
+from app import auth, posts, comments, likes, notifications
 from app.database import Base, engine
 from app.database import SessionLocal
 from typing import Annotated
@@ -16,8 +17,9 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI()
 app.include_router(auth.router)
 app.include_router(posts.router, prefix="/posts", tags=["Posts"])
-app.include_router(comments.router, prefix="/commnets", tags=["Commnets"])
+app.include_router(comments.router, prefix="/comments", tags=["comments"])
 app.include_router(likes.router, prefix="/likes", tags=["Likes"])
+app.include_router(notifications.router, prefix="/notifications", tags=["Notifications"])
 
 # Dependency for database session
 def get_db():
@@ -27,19 +29,25 @@ def get_db():
     finally:
         db.close()
 
+
 db_dependency = Annotated[Session, Depends(get_db)]
 user_dependency = Annotated[dict, Depends(get_current_user)]
+
+
 @app.get("/", status_code=status.HTTP_200_OK)
-async def user(user: user_dependency, db: db_dependency):
+async def user(user: user_dependency):
     if user is None:
         raise HTTPException(status_code=401, detail="Authentication failed")
-    return {"User": user}
+    user_data = user.__dict__.copy()
+    user_data.pop("hashed_password", None)
+    return {"User": user_data}
 
-async def get_current_user_from_token(websocket: WebSocket, db: Session = Depends(get_db)):
-    token = websocket.headers.get('Authorization')
+
+async def get_current_user_from_token(token: str, db:db_dependency):
     if token is None or not token.startswith("Bearer "):
         print("Authorization header missing or invalid")
-        raise HTTPException(status_code=403, detail="Authorization header missing or invalid")
+        raise HTTPException(
+            status_code=403, detail="Authorization header missing or invalid")
     token = token.split(" ")[1]
     print(f"Token: {token}")
     try:
@@ -58,8 +66,11 @@ async def get_current_user_from_token(websocket: WebSocket, db: Session = Depend
         raise HTTPException(status_code=403, detail="User not found")
     return user
 
-@app.websocket("/ws/{client_id}")
-async def websocket_endpoint(websocket: WebSocket, client_id: int, user: User = Depends(get_current_user_from_token)):
+@app.websocket("/ws/{client_id}/{token}")
+async def websocket_endpoint(websocket: WebSocket, client_id: int, token: str, db: db_dependency):
+    # Extract the token from the URL parameter
+    token = f"Bearer {token}"
+    await get_current_user_from_token(token, db)
     await manager.connect(websocket, client_id)
     try:
         while True:
@@ -68,3 +79,18 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int, user: User = 
             await manager.broadcast(f"Client #{client_id} says: {data}")
     except WebSocketDisconnect:
         manager.disconnect(websocket, client_id)
+
+# Add CORS middleware
+origins = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    # Add other origins as needed
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)

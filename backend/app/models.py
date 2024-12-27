@@ -2,6 +2,8 @@ from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.database import Base
+from datetime import datetime
+
 
 class User(Base):
     __tablename__ = "users"
@@ -16,6 +18,8 @@ class Post(Base):
     title = Column(String, nullable=False)
     content = Column(String, nullable=False)
     user_id = Column(Integer, ForeignKey("users.id"))
+    created_at = Column(DateTime, default=datetime.utcnow)
+    image_url = Column(String, nullable=True)
     comments = relationship("Comment", back_populates="post")
     likes = relationship("Like", back_populates="post")
 

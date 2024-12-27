@@ -14,7 +14,7 @@ from app.schemas import UserCreate, UserResponse, Token
 # JWT Settings
 SECRET_KEY = "123456"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 60
+ACCESS_TOKEN_EXPIRE_MINUTES = 1440  # 1 day
 
 router = APIRouter(
     prefix="/auth",
