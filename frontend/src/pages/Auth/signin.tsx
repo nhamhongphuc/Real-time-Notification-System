@@ -1,3 +1,4 @@
+import React from "react";
 import useAuthStore from "../../store/authStore";
 import { Button, Form, Grid, Input, message, theme, Typography } from "antd";
 
@@ -23,7 +24,7 @@ const SignIn: React.FC = () => {
     try {
       await signIn(values.username, values.password);
       navigate("/");
-    } catch (error) {
+    } catch {
       message.error("Failed to sign in. Please try again. ");
     }
   };
@@ -128,7 +129,7 @@ const SignIn: React.FC = () => {
               Log in
             </Button>
             <div style={styles.footer}>
-              <Text style={styles.text}>Don't have an account?</Text>{" "}
+              <Text style={styles.text}>Don&apos;t have an account?</Text>{" "}
               <Link to="/signup">Sign up now</Link>
             </div>
           </Form.Item>

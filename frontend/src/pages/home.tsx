@@ -90,7 +90,7 @@ const Home = () => {
     });
   };
 
-  const WS_URL = `ws://127.0.0.1:8000/ws/${user_id}/${tokenAuthen}`;
+  const WS_URL = `${process.env.REACT_APP_WEBSOCKET_URL}/${user_id}/${tokenAuthen}`;
   const { lastMessage } = useWebSocket(WS_URL, {
     share: false,
     shouldReconnect: () => true,
@@ -120,10 +120,15 @@ const Home = () => {
 
         if (data.action === "like" && !openNotificationModal) {
           openNotification(`${data.from} liked your post!`, "topRight");
-        } else if (data.action === "comment" && !openNotificationModal && item?.id !== data.post_id) {
-          const contentPreview = data.content.length > 50 
-                ? `${data.content.substring(0, 50)}...` 
-                : data.content;
+        } else if (
+          data.action === "comment" &&
+          !openNotificationModal &&
+          item?.id !== data.post_id
+        ) {
+          const contentPreview =
+            data.content.length > 50
+              ? `${data.content.substring(0, 50)}...`
+              : data.content;
           openNotification(
             `${data.from} commented on your post: ${contentPreview}`,
             "topRight"
@@ -182,6 +187,7 @@ const Home = () => {
       }
     }
   }, [lastMessage]);
+
   const fetchData = useCallback(async () => {
     try {
       setLoading(true);
@@ -452,10 +458,12 @@ const Home = () => {
                       description={
                         <>
                           <div>{timeAgo(item.created_at)}</div>
-                          <h3>
+                          <h3 style={{ color: "black" }}>
                             <strong>{item.title}</strong>
                           </h3>
-                          <div>{item.content}</div>
+                          <div style={{ color: "black" }}>
+                            {item.content}
+                          </div>
                         </>
                       }
                     />

@@ -71,16 +71,37 @@ A lightweight real-time notification system built with **FastAPI**, **WebSockets
    cd ../frontend
    ```
 
+2. Create a `.env` file and add necessary environment variables:
+   ```bash
+   cp .env.template .env
+   ```
+
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+4. Start the frontend development server:
+   ```bash
+   npm start
+   ```
+   The frontend will run at `http://localhost:3000`.
+
+### Common Assignment
+1. Navigate to the `CommonAssignment` folder:
+   ```bash
+   cd ../CommonAssignment
+   ```
+
 2. Install dependencies:
    ```bash
    npm install
    ```
 
-3. Start the frontend development server:
+3. Start testing:
    ```bash
-   npm start
+   npm test
    ```
-   The frontend will run at `http://localhost:3000`.
 
 ## Usage
 1. Open the frontend in a web browser (`http://localhost:3000`).
@@ -92,32 +113,94 @@ A lightweight real-time notification system built with **FastAPI**, **WebSockets
 ### Backend
 ```
 backend/
+├── __pycache__/
+├── .gitignore
 ├── app/
 │   ├── __init__.py
-│   ├── main.py
-│   ├── auth.py
-│   ├── posts.py
-│   ├── comments.py
-│   ├── likes.py
-│   ├── notifications.py
-│   ├── models.py
-│   ├── schemas.py
+│   ├── __pycache__/
 │   ├── database.py
-│   ├── requirements.txt
+│   ├── main.py
+│   ├── models/
+│   │   ├── comment.py
+│   │   ├── like.py
+│   │   ├── notification.py
+│   │   ├── post.py
+│   │   ├── user.py
+│   ├── routers/
+│   │   ├── auth.py
+│   │   ├── comments.py
+│   │   ├── likes.py
+│   │   ├── notifications.py
+│   │   ├── posts.py
+│   ├── schemas/
+│   │   ├── comment.py
+│   │   ├── like.py
+│   │   ├── notification.py
+│   │   ├── post.py
+│   │   ├── user.py
+├── image_uploads/
+├── requirements.txt
 ```
 
 ### Frontend
 ```
 frontend/
+├── .babelrc
+├── .env
+├── .env.template
+├── .gitignore
+├── babel.config.js
+├── eslint.config.mjs
+├── jest.config.js
+├── jest.setup.js
+├── package.json
+├── public/
+│   ├── index.html
+│   ├── manifest.json
+│   ├── robots.txt
 ├── src/
 │   ├── components/
-│   │   ├── PostList.jsx       # Post interaction UI
-│   │   ├── NotificationPanel.jsx  # Real-time notification display
+│   │   ├── Guards/
+│   │   │   ├── auth-guard.tsx
+│   │   │   ├── guest-guard.tsx
+│   │   │   ├── index.ts
+│   │   ├── Header/
+│   │   │   ├── index.tsx
+│   │   ├── Modal/
+│   │   │   ├── commentModal.tsx
+│   │   │   ├── editPostModal.tsx
+│   ├── pages/
+│   │   ├── Auth/
+│   │   │   ├── signin.tsx
+│   │   │   ├── signup.tsx
+│   │   ├── home.tsx
+│   ├── routes/
+│   │   ├── protected-routes.tsx
+│   │   ├── public-routes.tsx
+│   │   ├── theme-routes.ts
 │   ├── services/
-│   │   ├── api.js            # API client functions
-│   │   ├── websocket.js      # WebSocket client
-│   ├── App.jsx               # Main app component
-│   ├── index.js              # React DOM rendering
+│   │   ├── api.ts
+│   ├── store/
+│   │   ├── authStore.ts
+│   ├── ultils/
+│   │   ├── ultils.ts
+│   ├── App.css
+│   ├── App.tsx
+│   ├── index.css
+│   ├── index.tsx
+│   ├── react-app-env.d.ts
+│   ├── reportWebVitals.ts
+│   ├── setupTests.ts
+├── tsconfig.json
+```
+
+### Common Assignment
+```
+CommonAssignment/
+├── .gitignore
+├── package.json
+├── randomGenerator.js
+├── randomGenerator.test.js
 ```
 
 ## API Endpoints
@@ -137,11 +220,8 @@ frontend/
 ### Notifications
 - **Get Notification Count**: `GET /notifications/count`
 - **Get Notification History**: `GET /notifications`
-- **Mark Notification as Read**: `PATCH /notifications/{id}`
 
 ## Future Enhancements
-- **Authentication**: Add user-specific notifications.
-- **Push Notifications**: Integrate browser/mobile push notifications.
 - **Mobile Optimization**: Ensure full mobile responsiveness.
 - **Read/Unread Status**: Highlight unread notifications.
 

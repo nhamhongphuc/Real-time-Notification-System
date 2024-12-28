@@ -1,3 +1,4 @@
+import React from 'react';
 import { GuestGuard } from "../components/Guards";
 import Signin from "../pages/Auth/signin";
 import SignUp from "../pages/Auth/signup";

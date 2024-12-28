@@ -31,7 +31,7 @@ const SignUp: React.FC = () => {
     try {
       await signUp(values.email, values.username, values.password);
       navigate("/signin");
-    } catch (error: any) {
+    } catch {
       message.error("Failed to sign up. Please try again. ");
     }
   };

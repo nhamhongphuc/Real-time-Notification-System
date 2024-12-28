@@ -1,3 +1,4 @@
+import React from "react";
 import { Outlet } from "react-router-dom";
 import { AuthGuard } from "../components/Guards";
 import Home from "../pages/home";
